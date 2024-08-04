@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey</title>
+    <link rel="icon" href="Ya.png" type="image/png" sizes="32x32">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Global styles */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Disable scroll */
+            height: 100vh; /* Full viewport height */
+            background-color: #ffffff; /* White background */
+            display: flex;
+            flex-direction: column; /* Set main axis as column */
+            justify-content: center; /* Center items vertically */
+            align-items: center; /* Center items horizontally */
+            font-family: Arial, sans-serif;
+            color: #5a4a4a; /* Text color */
+        }
+
+        .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%; /* Make sure the container takes full width */
+            box-sizing: border-box; /* Include padding and border in width */
+        }
+
+        .logo {
+            width: 450px; /* Adjusted logo width */
+            height: auto;
+            margin-bottom: 20px; /* Space below logo */
+        }
+
+        .username-card {
+            padding: 20px;
+            background-color: #f8f9fa; /* Light background for card */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            max-width: 300px; /* Limit width of the card */
+            text-align: center;
+            width: 100%; /* Ensure the card takes full width */
+            box-sizing: border-box; /* Include padding and border in width */
+        }
+
+        .username-card input {
+            width: 100%; /* Full width */
+            padding: 10px; /* Add padding */
+            border: 1px solid #ccc; /* Border color */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 10px; /* Space below input */
+        }
+
+        .username-card button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff; /* Button color */
+            color: #ffffff; /* Button text color */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .username-card button:hover {
+            background-color: #0056b3; /* Darker button color on hover */
+        }
+
+        /* Notification box styles */
+        .notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 300px;
+            text-align: center;
+            display: none;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="BahKita.png" class="logo" alt="Logo">
+        <div class="username-card">
+            <h2>Masukkan Username</h2>
+            <input type="text" id="username" placeholder="Nama Anda" required>
+            <button onclick="submitUsername()">Masukkan</button>
+        </div>
+    </div>
+
+    <!-- Notification Box -->
+    <div class="notification" id="notification">
+        <span class="close-btn" onclick="closeNotification()">&times;</span>
+        <p id="notification-message">Maaf, kamu tidak ada dalam daftar.</p>
+    </div>
+
+    <script>
+        const validUsernames = [
+            'Mery',
+            'mery',
+            'MeRY',
+            'Tante',
+            'TANTE',
+            'TaNte',
+            'TAnte',
+            'TantE',
+            'tante',
+            'Mery Christina Tarihoran',
+            'Christian Johannes Hutahaean',
+            'Parlindungan Hutahaean',
+            'Idawaty Tarihoran',
+            'Christian',
+            'cHristian',
+            'mEry',
+            'MERY',
+            'Idawaty',
+            'Parlindungan',
+            'Elizabeth',
+            'Angel',
+            'angel',
+            'Tian',
+            'Ian',
+            'ian',
+            'IAN',
+            'ANGEL',
+            'AnGeL',
+            'ANgEL',
+            'AnGEL',
+            'anGEL',
+            'ANGeL',
+             'Zabeth',
+              'ZABETH',
+               'ELIZABETH',
+                'PAPA',
+                 'papa'
+        ];
+
+        function submitUsername() {
+            const username = document.getElementById('username').value.trim();
+            const usernameParts = username.split(' '); // Split input by space
+            const isValid = validUsernames.some(validUsername => {
+                return usernameParts.some(part => part.toLowerCase() === validUsername.toLowerCase());
+            });
+
+            if (isValid) {
+                // Redirect to English language page
+                window.location.href = 'english.html'; // Change URL to actual English language page
+            } else {
+                showNotification();
+            }
+        }
+
+        function showNotification() {
+            // Show notification for invalid usernames
+            document.getElementById('notification').classList.add('show');
+
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                closeNotification();
+            }, 3000); // Hide after 3 seconds
+        }
+
+        function closeNotification() {
+            // Close notification box
+            document.getElementById('notification').classList.remove('show');
+        }
+    </script>
+</body>
+</html>

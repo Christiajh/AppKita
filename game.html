@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permainan Memori</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #fce4ec, #f8bbd0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #e91e63;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-template-rows: repeat(4, 100px);
+            gap: 10px;
+            margin: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            transition: background-color 0.3s;
+        }
+
+        .card.flipped {
+            background-color: #ffeb3b;
+        }
+
+        .message {
+            margin: 20px;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #c2185b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Permainan Memori</h1>
+    </header>
+    <div class="game-container" id="game-container"></div>
+    <div class="message" id="message"></div>
+    <div class="button-container">
+        <button id="restart-button" style="display:none;" onclick="startGame()">Main Lagi</button>
+        <a href="english.html"><button id="english-button">Home</button></a>
+    </div>
+   
+    <script>
+        const cardImages = [
+            '🐶', '🐶',
+            '🐱', '🐱',
+            '🐰', '🐰',
+            '🦁', '🦁',
+            '🐸', '🐸',
+            '🐷', '🐷',
+            '🦊', '🦊',
+            '🐤', '🐤',
+        ];
+
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let matchedPairs = 0;
+
+        function shuffle(array) {
+            array.sort(() => Math.random() - 0.5);
+        }
+
+        function createCard(image) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.setAttribute('data-image', image);
+            card.addEventListener('click', flipCard);
+            return card;
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+
+            this.classList.add('flipped');
+            this.textContent = this.getAttribute('data-image');
+
+            if (!firstCard) {
+                firstCard = this;
+            } else {
+                secondCard = this;
+                lockBoard = true;
+
+                checkForMatch();
+            }
+        }
+
+        function checkForMatch() {
+            const isMatch = firstCard.getAttribute('data-image') === secondCard.getAttribute('data-image');
+
+            if (isMatch) {
+                disableCards();
+                matchedPairs++;
+                if (matchedPairs === cardImages.length / 2) {
+                    setTimeout(() => {
+                        document.getElementById("message").textContent = 'Selamat! Anda telah mencocokkan semua pasangan!';
+                        document.getElementById("restart-button").style.display = 'block';
+                    }, 500);
+                }
+            } else {
+                setTimeout(unflipCards, 1000);
+            }
+        }
+
+        function disableCards() {
+            firstCard.removeEventListener('click', flipCard);
+            secondCard.removeEventListener('click', flipCard);
+            resetBoard();
+        }
+
+        function unflipCards() {
+            firstCard.classList.remove('flipped');
+            secondCard.classList.remove('flipped');
+            firstCard.textContent = '';
+            secondCard.textContent = '';
+            resetBoard();
+        }
+
+        function resetBoard() {
+            [firstCard, secondCard] = [null, null];
+            lockBoard = false;
+        }
+
+        function startGame() {
+            matchedPairs = 0;
+            document.getElementById("message").textContent = '';
+            document.getElementById("restart-button").style.display = 'none';
+            const gameContainer = document.getElementById('game-container');
+            gameContainer.innerHTML = '';
+            shuffle(cardImages);
+
+            cardImages.forEach(image => {
+                const card = createCard(image);
+                gameContainer.appendChild(card);
+            });
+        }
+
+        startGame();
+    </script>
+</body>
+</html>

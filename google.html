@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencarian Soal Matematika dan Cerita</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+            margin-right: 10px;
+            outline: none;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-box button:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .explanation {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculator BahKita App</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Masukkan soal matematika atau cerita..." />
+            <button onclick="calculate()">Hitung</button>
+            <button onclick="window.location.href='english.html'">Home</button>
+
+        </div>
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const resultsDiv = document.getElementById("results");
+
+            if (input) {
+                let result;
+                try {
+                    if (input.includes("peluang munculnya angka genap")) {
+                        result = calculateEvenDiceProbability();
+                    } else if (input.includes("apel") && input.includes("dibagikan") && input.includes("keranjang")) {
+                        result = handleFruitBasket(input);
+                    } else if (input.includes("=")) {
+                        result = solveEquation(input);
+                    } else {
+                        result = eval(input);
+                    }
+                    resultsDiv.innerHTML = `<p>Hasil: <strong>${result}</strong></p>`;
+                    resultsDiv.innerHTML += `<div class="explanation">${getExplanation(input, result)}</div>`;
+                } catch (error) {
+                    resultsDiv.innerHTML = `<p>Soal tidak valid. Silakan coba lagi.</p>`;
+                }
+            } else {
+                resultsDiv.innerHTML = `<p>Silakan masukkan soal matematika.</p>`;
+            }
+        }
+
+        function calculateEvenDiceProbability() {
+            // Menghitung peluang munculnya angka genap pada dadu
+            const totalOutcomes = 6; // Total angka pada dadu (1-6)
+            const evenOutcomes = 3; // Angka genap (2, 4, 6)
+
+            const probability = evenOutcomes / totalOutcomes; // Peluang
+            return `Peluang munculnya angka genap adalah ${probability}`;
+        }
+
+        function handleFruitBasket(input) {
+            const totalApples = 12;
+            const fraction = 3 / 4;
+            const numberOfBaskets = 4;
+
+            const applesDistributed = totalApples * fraction; // Menghitung jumlah apel yang dibagikan
+            const applesPerBasket = applesDistributed / numberOfBaskets; // Menghitung jumlah apel per keranjang
+
+            return applesPerBasket; // Mengembalikan hasil
+        }
+
+        function solveEquation(input) {
+            const [leftSide, rightSide] = input.split('=').map(str => str.trim());
+            const rightValue = eval(rightSide); // Evaluasi sisi kanan
+            const variableMatch = leftSide.match(/([0-9]*\.?[0-9]*)\s*([a-zA-Z])\s*\+\s*([0-9]*\.?[0-9]*)/);
+
+            if (variableMatch) {
+                const coefficient = parseFloat(variableMatch[1]); // Koefisien dari variabel
+                const constant = parseFloat(variableMatch[3]); // Konstanta
+                const variable = variableMatch[2]; // Variabel
+
+                const result = (rightValue - constant) / coefficient;
+
+                return `Nilai dari ${variable} adalah ${result}`;
+            } else {
+                return "Format soal tidak dikenali. Pastikan formatnya benar.";
+            }
+        }
+
+        function getExplanation(input, result) {
+            if (input.includes("apel") && input.includes("dibagikan") && input.includes("keranjang")) {
+                return `Terdapat ${3/4 * 12} apel yang dibagikan. Setiap keranjang mendapatkan ${result} apel.`;
+            } else if (input.includes("=")) {
+                return `Persamaan dipecahkan untuk menemukan nilai variabel.`;
+            } else if (input.includes("peluang munculnya angka genap")) {
+                return `Dadu memiliki 6 sisi, dengan 3 sisi genap (2, 4, 6).`;
+            } else if (input.includes('+')) {
+                const numbers = input.split('+').map(Number);
+                return `Menjumlahkan ${numbers[0]} dan ${numbers[1]}: ${numbers[0]} + ${numbers[1]} = ${result}`;
+            } else if (input.includes('-')) {
+                const numbers = input.split('-').map(Number);
+                return `Mengurangkan ${numbers[0]} dan ${numbers[1]}: ${numbers[0]} - ${numbers[1]} = ${result}`;
+            } else if (input.includes('*')) {
+                const numbers = input.split('*').map(Number);
+                return `Mengalikan ${numbers[0]} dan ${numbers[1]}: ${numbers[0]} × ${numbers[1]} = ${result}`;
+            } else if (input.includes('/')) {
+                const numbers = input.split('/').map(Number);
+                return `Membagi ${numbers[0]} dengan ${numbers[1]}: ${numbers[0]} ÷ ${numbers[1]} = ${result}`;
+            } else {
+                return `Hasil dari ${input} adalah ${result}.`;
+            }
+        }
+    </script>
+</body>
+</html>

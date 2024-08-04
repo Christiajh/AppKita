@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BahKitaApp</title>
+    <link rel="icon" href="https://ouch-cdn2.icons8.com/HjjBoWYHnBHRlS2rC26bcV8cgAzgqzcBfmuDtbFjhXg/rs:fit:368:389/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvMjAv/ZGUyM2Y1MjgtZmFh/Zi00ODNkLWI0NzIt/MmNkZTIzNzU2OWE0/LnBuZw.png" type="image/png" sizes="32x32">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #ffffff);
+            background-color: #ffffff;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: -10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .list-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: left;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .search-bar {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .list {
+            padding: 0;
+            margin: 0;
+        }
+
+        .list-item:nth-child(1) {
+            background: linear-gradient(to right, #b3d1f6, #b3d1f6);
+        }
+
+        .list-item {
+            padding: 15px 20px;
+            font-size: 18px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.3s ease;
+            display: block;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .list-item:hover {
+            filter: brightness(1.2);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 300px;
+            max-width: 80%;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .notification h2 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .notification button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .notification button:hover {
+            background-color: #ffffff;
+            color: #c3bac3;
+            border: 1px solid #948a95;
+        }
+
+        .gallery-container {
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .gallery-category {
+            margin-bottom: 20px;
+        }
+
+        .gallery-category h3 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .gallery {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .gallery-item-container {
+            position: relative;
+        }
+
+        .gallery-item {
+            width: 120px; /* Increased width */
+            height: 120px; /* Increased height */
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            display: none; /* Initially hide all images */
+        }
+
+        .download-btn {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 2px 4px;
+            font-size: 12px;
+            border-radius: -2px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .gallery-item-container:hover .download-btn {
+            display: block;
+        }
+
+       
+    </style>
+    <script>
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.querySelector('h2').innerText = message;
+            notification.style.display = 'block';
+        }
+
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+
+        function handleListItemClick(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            const password = prompt("Masukkan Password Anda?");
+            
+            if (password === "010") { // Tante
+                showNotification("Anda Sudah Terdaftar");
+                setTimeout(() => {
+                    window.location.href = "desc.html";
+                }, 2000); // Redirect after 2 seconds
+            } else if (password === "253") { // Christian
+                showNotification("Anda Sudah Terdaftar");
+                setTimeout(() => {
+                    window.location.href = "ber.html";
+                }, 2000);
+            } else if (password === "765") { // papa
+                showNotification("Anda Sudah Terdaftar");
+                setTimeout(() => {
+                    window.location.href = "set.html";
+                }, 2000);
+            } else if (password === "671") { // mama
+                showNotification("Anda Sudah Terdaftar");
+                setTimeout(() => {
+                    window.location.href = "bis.html";
+                }, 2000);
+            } else if (password === "073") { // sabet
+                showNotification("Anda Sudah Terdaftar");
+                setTimeout(() => {
+                    window.location.href = "sss.html";
+                }, 2000);
+            } else if (password === "234") { // angel
+                showNotification("Anda Sudah Terdaftar");
+                setTimeout(() => {
+                    window.location.href = "fff.html";
+                }, 2000);
+            } else {
+                showNotification("Masukkan Password Yang Diberikan Guide");
+            }
+        }
+
+        function searchImages() {
+            const searchInput = document.querySelector('.search-input').value.toLowerCase();
+            const galleryItems = document.querySelectorAll('.gallery-item-container');
+            let found = false;
+
+            galleryItems.forEach(item => {
+                const imgAlt = item.querySelector('img').alt.toLowerCase();
+                // Show images based on search input
+                if (imgAlt.includes(searchInput)) {
+                    item.querySelector('img').style.display = 'block'; // Show matching images
+                    found = true;
+                } else {
+                    item.querySelector('img').style.display = 'none'; // Hide non-matching images
+                }
+            });
+
+            if (found) {
+                showNotification("Pencarian Sukses");
+            } else {
+                showNotification("Keterangan gagal ditemukan");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <!-- Hapus logo dan jam -->
+        </div>
+    </div>
+    <div class="list-container">
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Cari...">
+            <button onclick="searchImages()">Search</button>
+        </div>
+        <div class="list">
+            <a href="intro.html" class="list-item">Introduction</a>
+        </div>
+        <div class="list">
+            <a href="#" class="list-item" onclick="handleListItemClick(event)">Deskripsi Anggota</a>
+        </div>
+        <div class="list">
+            <a href="maps.html" class="list-item">Maps</a>
+        </div>
+        <div class="list">
+            <a href="google.html" class="list-item">Calculator</a>
+        </div>
+        <div class="list">
+            <a href="game.html" class="list-item">Memory Game</a>
+        </div>
+        <div class="list">
+            <a href="game2.html" class="list-item">Tebak Botol </a>
+        </div>
+        <div class="list">
+            <a href="game3.html" class="list-item"> Tic Tac Toe </a>
+        </div>
+
+       
+    </div>
+
+   
+    <div class="gallery-container">
+        <div class="gallery-category">
+            <h3>Gallery</h3>
+            <div class="gallery">
+
+                <div class="gallery-item-container">
+                    <img src="acara.jpg" alt="acara/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image1.jpg')">Download</button>
+                </div>
+
+                <div class="gallery-item-container">
+                    <img src="tante.jpg" alt="tante/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image1.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="tante2.jpg" alt="tante/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image2.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="tante3.jpg" alt="tante/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="tante4.jpg" alt="tante/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="tante5.jpg" alt="tante/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan2.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan3.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan4.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan5.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan6.jpg" alt="liburan/Liburan/alll" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan7.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan8.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan9.jpg" alt="liburan/Liburan/alll" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan10.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan11.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan12.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan13.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan14.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan15.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan16.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan17.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan18.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan19.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan20.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan21.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan22.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan23.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan24.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan25.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan26.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan27.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan28.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan29.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan30.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan31.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan32.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan33.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan34.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="jalan35.jpg" alt="liburan/Liburan/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+
+
+
+
+                <div class="gallery-item-container">
+                    <img src="opung binjai.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai2.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai3.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai4.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai5.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai6.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai7.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai8.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai9.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai10.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai11.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai12.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai13.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai14.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai15.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai16.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai17.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai18.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai19.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai20.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai21.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai22.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai23.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="opung binjai24.jpg" alt="Binjai/binjai/tarihoran/Tarihoran/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+               
+                <div class="gallery-item-container">
+                    <img src="natal.jpg" alt="natal/Natal/christmas/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="natal2.jpg" alt="natal/Natal/christmas/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="natal3.jpg" alt="natal/Natal/christmas/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="natal4.jpg" alt="natal/Natal/christmas/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="natal5.jpg" alt="natal/Natal/christmas/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="natal6.jpg" alt="natal/Natal/christmas/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil2.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil3.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil4.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+
+                <div class="gallery-item-container">
+                    <img src="sabet kecil5.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil6.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil7.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil8.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil9.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil10.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil11.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil12.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil13.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil14.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil15.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil16.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil17.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil18.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil19.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil20.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil21.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil22.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil23.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil24.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil25.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil26.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil27.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="sabet kecil28.jpg" alt="Zabeth/ZAbEtH/ELIZABETH/Elizabeth/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+
+
+
+
+
+
+
+                <div class="gallery-item-container">
+                    <img src="angel.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel2.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel3.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel4.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel5.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel6.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel7.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel8.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel9.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel10.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel11.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel12.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel13.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel14.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel15.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel16.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel17.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel18.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel19.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel20.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel21.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel22.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+
+
+
+                <div class="gallery-item-container">
+                    <img src="angel23.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel24.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel25.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel26.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel27.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel28.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel29.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel30.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel31.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel32.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel33.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel34.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel35.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel36.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel37.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel38.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel39.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel40.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel41.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel42.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel43.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel44.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel45.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel46.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel47.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel48.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel49.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel50.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel51.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel52.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel53.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel54.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel55.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel56.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel57.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel58.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel59.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel60.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel61.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel62.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel63.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel64.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel65.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel66.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="angel67.jpg" alt="Angel/angel/Angeline/ANGELINE/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                
+
+
+
+                <div class="gallery-item-container">
+                    <img src="crop.jpg" alt="crop/Crop/CROP/cRoP/CRop/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="crop2.jpg" alt="crop/Crop/CROP/cRoP/CRop/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian2.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian3.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian4.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian5.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian6.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian7.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian8.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian9.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian10.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian11.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian12.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian13.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian14.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian15.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian16.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian17.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian18.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian19.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="ian20.jpg" alt="ian/Tian/IAN/ian/bang ian/Christian/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama2.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama3.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama4.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama5.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama6.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama7.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama8.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama9.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama10.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama11.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama12.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama13.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama14.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama15.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama16.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama17.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama18.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama19.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama20.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama21.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama22.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama23.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama24.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama25.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+                <div class="gallery-item-container">
+                    <img src="mama26.jpg" alt="Mama/mama/Idawaty/MAMA/MaMa/all" class="gallery-item">
+                    <button class="download-btn" onclick="downloadImage('path/to/image3.jpg')">Download</button>
+                </div>
+       
+
+            </div>
+        </div>
+    </div>
+    <div class="notification" id="notification">
+        <h2>Notification</h2>
+        <button onclick="hideNotification()">OK</button>
+    </div>
+    <script>
+        function downloadImage(imagePath) {
+            const link = document.createElement('a');
+            link.href = imagePath;
+            link.download = imagePath.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Lokasi</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 65%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin-left: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #map {
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .button-group {
+            margin-top: 10px;
+        }
+
+        .back-button {
+            background-color: #007bff;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .distance {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Peta Lokasi</h1>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Cari lokasi..." />
+            <button id="search-button">Cari</button>
+
+        </div>
+        <div id="map"></div>
+        <div class="button-group">
+            <button class="back-button" onclick="window.location.href='english.html'">Kembali</button>
+            <button id="current-location-button">Lokasi Saat Ini</button>
+        </div>
+        <div class="distance" id="distance"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([-7.250445, 112.768845], 13); // Koordinat awal (Surabaya)
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        const marker = L.marker([-7.250445, 112.768845]).addTo(map); // Marker awal
+
+        let currentLocation = null; // Menyimpan lokasi saat ini
+        let line = null; // Menyimpan garis antara lokasi
+
+        document.getElementById('search-button').addEventListener('click', () => {
+            const searchInput = document.getElementById('search-input').value;
+            geocodeLocation(searchInput);
+        });
+
+        document.getElementById('current-location-button').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { latitude, longitude } = position.coords;
+                    currentLocation = L.latLng(latitude, longitude); // Simpan lokasi saat ini
+                    map.setView(currentLocation, 13);
+                    marker.setLatLng(currentLocation);
+                    marker.bindPopup("Lokasi Anda Saat Ini").openPopup();
+                }, () => {
+                    alert('Gagal mendapatkan lokasi saat ini.');
+                });
+            } else {
+                alert('Geolokasi tidak didukung oleh browser ini.');
+            }
+        });
+
+        function geocodeLocation(location) {
+            const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const { lat, lon } = data[0];
+                        const destinationLocation = L.latLng(lat, lon); // Lokasi tujuan
+
+                        map.setView(destinationLocation, 13);
+                        marker.setLatLng(destinationLocation);
+                        marker.bindPopup(location).openPopup();
+
+                        // Hitung jarak jika lokasi saat ini tersedia
+                        if (currentLocation) {
+                            const distance = currentLocation.distanceTo(destinationLocation) / 1000; // Jarak dalam kilometer
+                            document.getElementById('distance').innerText = `Jarak dari lokasi saat ini: ${distance.toFixed(2)} km`;
+
+                            // Menggambar garis antara lokasi saat ini dan lokasi tujuan
+                            if (line) {
+                                map.removeLayer(line); // Hapus garis sebelumnya
+                            }
+                            line = L.polyline([currentLocation, destinationLocation], { color: 'blue', weight: 4 }).addTo(map);
+                        } else {
+                            document.getElementById('distance').innerText = `Silakan dapatkan lokasi saat ini terlebih dahulu.`;
+                        }
+                    } else {
+                        alert('Lokasi tidak ditemukan.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat mencari lokasi.');
+                });
+        }
+    </script>
+</body>
+</html>

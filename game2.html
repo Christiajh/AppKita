@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permainan Tebak Botol</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #e0f7fa, #80deea);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #009688;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .bottle-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .bottle {
+            width: 80px;
+            height: 150px;
+            border: 2px solid #009688;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 10px;
+            background-color: #ffffff;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .hidden {
+            background-color: #f44336;
+        }
+
+        .score {
+            font-size: 24px;
+            margin: 20px;
+        }
+
+        button {
+            background-color: #009688;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #00796b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Permainan Tebak Botol</h1>
+    </header>
+    <div class="score" id="scoreDisplay">Tebak botol mana yang menyimpan barang!</div>
+    <div class="bottle-container" id="bottleContainer">
+        <div class="bottle" id="bottle1"></div>
+        <div class="bottle" id="bottle2"></div>
+        <div class="bottle" id="bottle3"></div>
+    </div>
+    <button id="startButton" onclick="startGame()">Mulai Permainan</button>
+
+    <script>
+        let bottles = ['bottle1', 'bottle2', 'bottle3'];
+        let hiddenBottle = null;
+        let score = 0;
+        const item = '🎁'; // Item yang disembunyikan
+
+        function startGame() {
+            hiddenBottle = Math.floor(Math.random() * 3); // Pilih botol secara acak
+            score = 0;
+            document.getElementById('scoreDisplay').textContent = 'Tebak botol mana yang menyimpan barang!';
+            showItemInBottles();
+
+            // Setelah 2 detik, sembunyikan barang dan gerakkan botol
+            setTimeout(() => {
+                hideItemsAndMoveBottles();
+            }, 2000); // Tampilkan barang selama 2 detik sebelum berpindah
+        }
+
+        function showItemInBottles() {
+            const bottleContainer = document.getElementById('bottleContainer');
+            bottleContainer.childNodes.forEach((bottle, index) => {
+                bottle.textContent = index === hiddenBottle ? item : ''; // Tampilkan barang di botol yang benar
+            });
+        }
+
+        function hideItemsAndMoveBottles() {
+            const bottleContainer = document.getElementById('bottleContainer');
+            bottleContainer.childNodes.forEach((bottle) => {
+                bottle.textContent = ''; // Sembunyikan barang
+            });
+
+            // Gerakkan botol secara acak
+            const moves = 10; // Jumlah gerakan
+            let count = 0;
+
+            const moveInterval = setInterval(() => {
+                const randomIndex1 = Math.floor(Math.random() * 3);
+                let randomIndex2;
+                do {
+                    randomIndex2 = Math.floor(Math.random() * 3);
+                } while (randomIndex1 === randomIndex2);
+
+                // Tukar posisi botol
+                const bottle1 = document.getElementById(bottles[randomIndex1]);
+                const bottle2 = document.getElementById(bottles[randomIndex2]);
+
+                // Tukar posisi botol dengan animasi
+                bottle1.style.transform = `translateX(${randomIndex2 * 100}px)`;
+                bottle2.style.transform = `translateX(${-randomIndex1 * 100}px)`;
+
+                // Update array botol
+                const temp = bottles[randomIndex1];
+                bottles[randomIndex1] = bottles[randomIndex2];
+                bottles[randomIndex2] = temp;
+
+                count++;
+                if (count >= moves) {
+                    clearInterval(moveInterval);
+                    setTimeout(() => {
+                        askForGuess(); // Tanyakan tebakan setelah bergerak
+                    }, 500);
+                }
+            }, 300);
+        }
+
+        function askForGuess() {
+            const guess = prompt('Tebak nomor botol (1, 2, atau 3):');
+            if (parseInt(guess) - 1 === hiddenBottle) {
+                alert('Tebakan Anda benar! 🎉');
+                score++;
+            } else {
+                alert('Tebakan Anda salah! Barang ada di botol ' + (hiddenBottle + 1) + '. 😢');
+            }
+            document.getElementById('scoreDisplay').textContent = `Skor Anda: ${score}`;
+            document.getElementById('startButton').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
